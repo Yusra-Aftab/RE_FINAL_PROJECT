@@ -1,15 +1,8 @@
-/**
- * @name        Simple Java Calculator
- * @package     ph.calculator
- * @file        Main.java
- * @author      SORIA Pierre-Henry
- * @email       pierrehs@hotmail.com
- * @link        http://github.com/pH-7
- * @copyright   Copyright Pierre-Henry SORIA, All Rights Reserved.
- * @license     Apache (http://www.apache.org/licenses/LICENSE-2.0)
- */
-
 package simplejavacalculator;
+
+import java.awt.*;
+import java.io.IOException;
+import java.io.InputStream;
 
 import static java.lang.Double.NaN;
 import static java.lang.Math.log;
@@ -19,46 +12,44 @@ import static java.lang.Math.pow;
 public class Calculator {
 
     public enum BiOperatorModes {
-        normal, add, minus, multiply, divide , xpowerofy 
+        NORMAL, ADD, MINUS, MULTIPLY, DIVIDE, X_POWER_OF_Y
     }
 
     public enum MonoOperatorModes {
-        square, squareRoot, oneDividedBy, cos, sin, tan, log, rate, abs, ln,
+        SQUARE, SQUARE_ROOT, ONE_DIVIDED_BY, COS, SIN, TAN, LOG, RATE, ABS, LN,
     }
 
     private Double num1, num2;
-    private BiOperatorModes mode = BiOperatorModes.normal;
+    private BiOperatorModes mode = BiOperatorModes.NORMAL;
 
     private Double calculateBiImpl() {
-        if (mode == BiOperatorModes.normal) {
+        if (mode == BiOperatorModes.NORMAL) {
             return num2;
         }
-        if (mode == BiOperatorModes.add) {
+        if (mode == BiOperatorModes.ADD) {
             if (num2 != 0) {
                 return num1 + num2;
             }
-
             return num1;
         }
-        if (mode == BiOperatorModes.minus) {
+        if (mode == BiOperatorModes.MINUS) {
             return num1 - num2;
         }
-        if (mode == BiOperatorModes.multiply) {
+        if (mode == BiOperatorModes.MULTIPLY) {
             return num1 * num2;
         }
-        if (mode == BiOperatorModes.divide) {
+        if (mode == BiOperatorModes.DIVIDE) {
             return num1 / num2;
         }
-        if (mode == BiOperatorModes.xpowerofy) {
-            return pow(num1,num2);
+        if (mode == BiOperatorModes.X_POWER_OF_Y) {
+            return pow(num1, num2);
         }
 
-        // never reach
-        throw new Error();
+        throw new IllegalStateException("Unexpected value: " + mode);
     }
 
     public Double calculateBi(BiOperatorModes newMode, Double num) {
-        if (mode == BiOperatorModes.normal) {
+        if (mode == BiOperatorModes.NORMAL) {
             num2 = 0.0;
             num1 = num;
             mode = newMode;
@@ -72,59 +63,54 @@ public class Calculator {
     }
 
     public Double calculateEqual(Double num) {
-        return calculateBi(BiOperatorModes.normal, num);
+        return calculateBi(BiOperatorModes.NORMAL, num);
     }
 
     public Double reset() {
         num2 = 0.0;
         num1 = 0.0;
-        mode = BiOperatorModes.normal;
+        mode = BiOperatorModes.NORMAL;
 
         return NaN;
     }
 
-    
     public Double calculateMono(MonoOperatorModes newMode, Double num) {
-        if (newMode == MonoOperatorModes.square) {
-            return num * num;
+        switch (newMode) {
+            case SQUARE:
+                return num * num;
+            case SQUARE_ROOT:
+                return Math.sqrt(num);
+            case ONE_DIVIDED_BY:
+                return 1 / num;
+            case COS:
+                return Math.cos(Math.toRadians(num));
+            case SIN:
+                return Math.sin(Math.toRadians(num));
+            case TAN:
+                if (num == 0 || num % 180 == 0) {
+                    return 0.0;
+                }
+                if (num % 90 == 0 && num % 180 != 0) {
+                    return NaN;
+                }
+                return Math.tan(Math.toRadians(num));
+            case LOG:
+                return log10(num);
+            case LN:
+                return log(num);
+            case RATE:
+                return num / 100;
+            case ABS:
+                return Math.abs(num);
+            default:
+                throw new IllegalStateException("Unexpected value: " + newMode);
         }
-        if (newMode == MonoOperatorModes.squareRoot) {
-            return Math.sqrt(num);
-        }
-        if (newMode == MonoOperatorModes.oneDividedBy) {
-            return 1 / num;
-        }
-        if (newMode == MonoOperatorModes.cos) {
-            return Math.cos(Math.toRadians(num));
-        }
-        if (newMode == MonoOperatorModes.sin) {
-            return Math.sin(Math.toRadians(num));
-        }
-        if (newMode == MonoOperatorModes.tan) {
-            if (num == 0 || num % 180 == 0) {
-                return 0.0;
-            }
-            if (num % 90 == 0 && num % 180 != 0) {
-                return NaN;
-            }
-
-            return Math.tan(Math.toRadians(num));
-        }
-        if (newMode == MonoOperatorModes.log) {
-            return log10(num);
-        }
-        if (newMode == MonoOperatorModes.ln) {
-            return log(num);
-        }
-        if (newMode == MonoOperatorModes.rate) {
-           return num / 100;
-        }
-        if (newMode == MonoOperatorModes.abs){
-            return Math.abs(num);
-        }
-
-        // never reach
-        throw new Error();
     }
+}
 
+class BufferedImageCustom {
+    public Image imageReturn() throws IOException {
+        InputStream bis = getClass().getResourceAsStream("/resources/icon/icon.png");
+        return ImageIO.read(bis);
+    }
 }
