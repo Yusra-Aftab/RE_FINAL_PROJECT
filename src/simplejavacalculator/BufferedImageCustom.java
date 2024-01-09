@@ -1,23 +1,26 @@
 package simplejavacalculator;
 
-import java.io.*;
-import java.awt.image.BufferedImage;
+import java.awt.Image;
+import java.io.IOException;
+import java.io.InputStream;
 import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
- *This class will return an image
- *from a binary data.
+ * This class provides methods for working with images.
  */
-class BufferedImageCustom {
-   public Image imageReturn() 
-      throws IOException {
-      Image image;
-      
-      InputStream bis = getClass().getResourceAsStream("/resources/icon/icon.png");
-      BufferedImage bImage2 = ImageIO.read(bis);
-      image = bImage2;
-      
-      return image;
-   }       
+public class ImageUtils {
+
+    /**
+     * Loads an image from the specified resource path.
+     *
+     * @param resourcePath The path to the image resource.
+     * @return The loaded Image object.
+     * @throws IOException If an error occurs while reading the image.
+     */
+    public static Image loadImage(String resourcePath) throws IOException {
+        InputStream inputStream = ImageUtils.class.getResourceAsStream(resourcePath);
+        BufferedImage bufferedImage = ImageIO.read(inputStream);
+        return bufferedImage;
+    }
 }
